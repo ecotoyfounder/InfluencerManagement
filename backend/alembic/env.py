@@ -11,8 +11,8 @@ from alembic import context
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import your models' Base metadata
-from backend.database import Base
-from backend.models import Influencer
+from database import Base
+from models import Influencer
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

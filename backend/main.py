@@ -1,11 +1,21 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from backend.database import SessionLocal
-from backend.models import Influencer
+from database import SessionLocal
+from models import Influencer, Employee
 from pydantic import BaseModel
 from typing import List
 
 app = FastAPI()
+
+# CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # Dependency for getting the database session
@@ -23,6 +33,7 @@ class InfluencerCreate(BaseModel):
     last_name: str
 
 
+# Pydantic Model for Influencer
 class InfluencerResponse(BaseModel):
     id: int
     first_name: str
@@ -31,6 +42,17 @@ class InfluencerResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+# Pydantic Model for Employee
+class EmployeeResponse(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+
+    class Config:
+        from_attributes = True
+
+
 @app.get("/")
 def read_root():
     """
@@ -38,13 +60,27 @@ def read_root():
     """
     return {"message": "Welcome to the Influencer Management API!"}
 
+
 @app.get("/influencers", response_model=List[InfluencerResponse])
-def get_influencers(db: Session = Depends(get_db)):
+def get_influencers(
+    name: str = None, manager_id: int = None, db: Session = Depends(get_db)
+):
     """
-    Get the list of all influencers.
+    Get the list of all influencers with optional filters.
+
+    - **name**: Filter influencers by first name or last name (case-insensitive, partial match).
+    - **manager_id**: Filter influencers by the ID of their assigned manager.
     """
-    influencers = db.query(Influencer).all()
-    return influencers
+    query = db.query(Influencer)
+    if name:
+        query = query.filter(
+            Influencer.first_name.contains(name) |
+            Influencer.last_name.contains(name)
+        )
+    if manager_id:
+        query = query.filter(Influencer.manager_id == manager_id)
+    return query.all()
+
 
 
 @app.post("/influencers", response_model=InfluencerResponse)
@@ -102,3 +138,13 @@ def delete_influencer(id: int, db: Session = Depends(get_db)):
     db.delete(influencer)
     db.commit()
     return {"message": f"Influencer with ID {id} deleted successfully"}
+
+
+# Employee Endpoints
+@app.get("/employees", response_model=List[EmployeeResponse])
+def get_employees(db: Session = Depends(get_db)):
+    """
+    Get the list of all employees.
+    """
+    employees = db.query(Employee).all()
+    return employees
