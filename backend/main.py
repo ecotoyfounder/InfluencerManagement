@@ -7,6 +7,7 @@ from typing import List
 
 app = FastAPI()
 
+
 # Dependency for getting the database session
 def get_db():
     db = SessionLocal()
@@ -15,10 +16,12 @@ def get_db():
     finally:
         db.close()
 
+
 # Pydantic model for input validation
 class InfluencerCreate(BaseModel):
     first_name: str
     last_name: str
+
 
 class InfluencerResponse(BaseModel):
     id: int
@@ -26,9 +29,16 @@ class InfluencerResponse(BaseModel):
     last_name: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
-@app.get("/influencers", responce_model=List[InfluencerResponse])
+@app.get("/")
+def read_root():
+    """
+    Root endpoint.
+    """
+    return {"message": "Welcome to the Influencer Management API!"}
+
+@app.get("/influencers", response_model=List[InfluencerResponse])
 def get_influencers(db: Session = Depends(get_db)):
     """
     Get the list of all influencers.
@@ -36,16 +46,20 @@ def get_influencers(db: Session = Depends(get_db)):
     influencers = db.query(Influencer).all()
     return influencers
 
+
 @app.post("/influencers", response_model=InfluencerResponse)
 def create_influencer(influencer: InfluencerCreate, db: Session = Depends(get_db)):
     """
     Add a new influencer to the database.
     """
-    db_influencer = Influencer(first_name=influencer.first_name, last_name=influencer.last_name)
+    db_influencer = Influencer(
+        first_name=influencer.first_name, last_name=influencer.last_name
+    )
     db.add(db_influencer)
     db.commit()
     db.refresh(db_influencer)
     return db_influencer
+
 
 @app.get("/influencers/{id}", response_model=InfluencerResponse)
 def get_influencer(id: int, db: Session = Depends(get_db)):
@@ -57,8 +71,11 @@ def get_influencer(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Influencer not found")
     return influencer
 
+
 @app.put("/influencers/{id}", response_model=InfluencerResponse)
-def update_influencer(id: int, influencer_data: InfluencerCreate, db: Session = Depends(get_db)):
+def update_influencer(
+    id: int, influencer_data: InfluencerCreate, db: Session = Depends(get_db)
+):
     """
     Update an influencer by ID.
     """
@@ -71,6 +88,7 @@ def update_influencer(id: int, influencer_data: InfluencerCreate, db: Session = 
     db.commit()
     db.refresh(influencer)
     return influencer
+
 
 @app.delete("/influencers/{id}")
 def delete_influencer(id: int, db: Session = Depends(get_db)):
