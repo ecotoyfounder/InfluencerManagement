@@ -1,0 +1,18 @@
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input {
+  padding: 4px;
+  border: solid 1px var(--box-background-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: 30px;
+  width: 300px;
+}
+
+.input:focus {
+  outline: solid 1px var(--secondary-color);
+}

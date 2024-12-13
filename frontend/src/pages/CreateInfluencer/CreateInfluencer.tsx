@@ -1,6 +1,6 @@
 import React from 'react';
-import { createInfluencer } from '../services/influencerService';
-import Form from '../components/Form';
+import { createInfluencer } from '../../services/influencerService';
+import Form from '../../components/Form/Form';
 
 const CreateInfluencer: React.FC = () => {
   const handleSubmit = async (data: {

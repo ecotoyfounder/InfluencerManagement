@@ -1,4 +1,5 @@
 import React from 'react';
+import './Input.css';
 
 interface TextInputProps {
   label?: string;
@@ -10,7 +11,7 @@ interface TextInputProps {
   type?: string;
 }
 
-const TextInput: React.FC<TextInputProps> = ({
+const Input: React.FC<TextInputProps> = ({
   label,
   value,
   onChange,
@@ -20,9 +21,10 @@ const TextInput: React.FC<TextInputProps> = ({
   type = 'text',
 }) => {
   return (
-    <div>
+    <div className="input-container">
       {label && <label>{label}</label>}
       <input
+        className="input"
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -34,4 +36,4 @@ const TextInput: React.FC<TextInputProps> = ({
   );
 };
 
-export default TextInput;
+export default Input;

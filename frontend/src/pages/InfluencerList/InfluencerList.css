@@ -1,0 +1,20 @@
+.container,
+.item-container,
+.actions {
+  display: flex;
+  gap: 14px;
+}
+
+.container {
+  flex-direction: column;
+}
+
+.actions,
+.item-container {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remove-btn {
+  background-color: var(--red-color);
+}

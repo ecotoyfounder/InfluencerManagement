@@ -17,3 +17,13 @@ export const createInfluencer = async (
   });
   return response.json();
 };
+
+export const deleteInfluencer = async (id: number): Promise<void> => {
+  const response = await fetch(`${API_URL}/influencers/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete influencer');
+  }
+};

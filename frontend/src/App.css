@@ -1,0 +1,23 @@
+.app-container {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+}
+
+.nav-container {
+  grid-row: 1;
+  background-color: var(--secondary-color);
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.main-container {
+  grid-row: 2;
+  padding: 30px;
+  overflow-y: auto;
+  background-color: var(--light-color);
+}

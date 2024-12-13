@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { SocialMediaAccount } from '../interfaces/Influencer';
-import { SocialMediaPlatform } from '../interfaces/SocialMedia';
-import Selector from './Selector';
-import TextInput from './Input';
-import Button from './Button';
+import { SocialMediaAccount } from '../../interfaces/Influencer';
+import { SocialMediaPlatform } from '../../interfaces/SocialMedia';
+import Selector from '../Selector/Selector';
+import Input from '../Input/Input';
+import Button from '../Button/Button';
+import './Form.css';
 
 interface InfluencerFormProps {
   label: string;
@@ -53,32 +54,33 @@ const InfluencerForm: React.FC<InfluencerFormProps> = ({ label, onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="form">
       <h1>{label}</h1>
-      <TextInput
+      <Input
         label="First Name:"
         value={firstName}
         onChange={setFirstName}
         maxLength={50}
         required
       />
-      <TextInput
+      <Input
         label="Last Name:"
         value={lastName}
         onChange={setLastName}
         maxLength={50}
         required
       />
-      <div>
+      <div className="sn-container">
         <h3>Social Media Accounts</h3>
         {socialMediaAccounts.map((account, index) => (
-          <div key={index}>
+          <div key={index} className="sn-item">
             <Selector<SocialMediaPlatform>
               value={account.platform}
               options={['Instagram', 'TikTok']}
               onChange={(platform) => handlePlatformChange(index, platform)}
+              placeholder="Select a platform ..."
             />
-            <TextInput
+            <Input
               placeholder="Username"
               value={account.username}
               onChange={(username) => handleUsernameChange(index, username)}

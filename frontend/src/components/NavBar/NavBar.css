@@ -1,0 +1,22 @@
+.nav-container {
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: var(--secondary-color);
+}
+
+.link-container {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  font-size: 1.5rem;
+}
+
+.link {
+  color: var(--light-color);
+}
+
+.active-link {
+  color: var(--yellow-color);
+}
