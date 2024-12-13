@@ -1,3 +1,5 @@
+import { Employee } from './Employee';
+
 export interface SocialMediaAccount {
   platform: 'Instagram' | 'TikTok';
   username: string;
@@ -9,7 +11,7 @@ export interface Influencer {
   first_name: string;
   last_name: string;
   social_media_accounts: SocialMediaAccount[];
-  manager_id?: number;
+  manager?: Employee | null;
 }
 
 export interface InfluencerPayload {

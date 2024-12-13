@@ -1,0 +1,16 @@
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--secondary-color);
+  color: var(--light-color);
+  cursor: pointer;
+  transition: filter 0.3s;
+  height: fit-content;
+}
+
+.btn:hover {
+  filter: brightness(70%);
+}

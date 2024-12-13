@@ -1,0 +1,20 @@
+.form,
+.sn-container,
+.sn-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.form {
+  padding: 30px;
+  border-radius: 8px;
+  border: solid 1px var(--box-background-color);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+}
+
+.sn-item {
+  flex-direction: row;
+}
