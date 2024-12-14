@@ -16,6 +16,7 @@ import Input from '../../components/Input/Input';
 import useFilteredInfluencers from '../../hooks/useFilteredInfluencers';
 import './InfluencerList.css';
 import Modal from '../../components/Modal/Modal';
+import Loader from '../../components/Loader/Loader';
 
 const InfluencerList: React.FC = () => {
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
@@ -29,6 +30,12 @@ const InfluencerList: React.FC = () => {
   >(null);
 
   const filteredInfluencers = useFilteredInfluencers(influencers, searchTerm);
+
+  const handleError = (message: string, error?: unknown) => {
+    console.error(message, error);
+    setError(message);
+    setModalMessage(message);
+  };
 
   const updateInfluencerManager = (
     influencerId: number,
@@ -56,8 +63,8 @@ const InfluencerList: React.FC = () => {
         prev.filter((influencer) => influencer.id !== selectedInfluencerId),
       );
       closeModal();
-    } catch (err: unknown) {
-      setModalMessage((err as Error).message || 'Failed to delete influencer');
+    } catch (err) {
+      handleError('Failed to delete influencer', err);
     } finally {
       setSelectedInfluencerId(null);
     }
@@ -72,19 +79,21 @@ const InfluencerList: React.FC = () => {
       const manager = employees.find((e) => e.id === employeeId);
       updateInfluencerManager(influencerId, manager || null);
     } catch (err) {
-      console.error('Failed to assign employee', err);
+      handleError('Failed to assign employee', err);
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const [influencersData, employeesData]: [Influencer[], Employee[]] =
           await Promise.all([getInfluencers(), getEmployees()]);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         setInfluencers(influencersData);
         setEmployees(employeesData);
       } catch (err) {
-        setError('Failed to fetch data');
+        handleError('Failed to fetch data', err);
       } finally {
         setLoading(false);
       }
@@ -98,59 +107,57 @@ const InfluencerList: React.FC = () => {
     setSelectedInfluencerId(null);
   };
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
-
   return (
-    <div className="container">
-      <h1>Influencer List</h1>
+    <div className={`main-container ${loading ? 'loading' : ''}`}>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <h1>Influencer List</h1>
 
-      <Input
-        value={searchTerm}
-        onChange={setSearchTerm}
-        placeholder="Search ..."
-      />
+          <Input
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search ..."
+          />
 
-      <div className="container">
-        {filteredInfluencers && filteredInfluencers.length > 0 ? (
-          filteredInfluencers.map((influencer) => (
-            <div key={influencer.id} className="item-container">
-              <InfluencerCard influencer={influencer} />
-              <div className="actions">
-                <AssignEmployee
-                  employees={employees}
-                  influencerId={influencer.id}
-                  currentManager={influencer.manager}
-                  onAssign={handleAssignEmployee}
-                />
+          <div className="container">
+            {filteredInfluencers && filteredInfluencers.length > 0 ? (
+              filteredInfluencers.map((influencer) => (
+                <div key={influencer.id} className="item-container">
+                  <InfluencerCard influencer={influencer} />
+                  <div className="actions">
+                    <AssignEmployee
+                      employees={employees}
+                      influencerId={influencer.id}
+                      currentManager={influencer.manager}
+                      onAssign={handleAssignEmployee}
+                    />
+                    <Button
+                      className="remove-btn"
+                      onClick={() => openDeleteModal(influencer.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No influencers found.</p>
+            )}
+          </div>
 
-                <Button
-                  className="remove-btn"
-                  onClick={() => openDeleteModal(influencer.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No influencers found.</p>
-        )}
-      </div>
-      <Modal
-        title="Confirmation"
-        message={modalMessage || ''}
-        isVisible={!!modalMessage}
-        onClose={closeModal}
-        onConfirm={handleDeleteInfluencer}
-        confirmButtonLabel="Delete"
-        confirmButtonStyle="remove-btn"
-      />
+          <Modal
+            title="Confirmation"
+            message={modalMessage || ''}
+            isVisible={!!modalMessage}
+            onClose={closeModal}
+            onConfirm={handleDeleteInfluencer}
+            confirmButtonLabel="Delete"
+            confirmButtonStyle="remove-btn"
+          />
+        </>
+      )}
     </div>
   );
 };

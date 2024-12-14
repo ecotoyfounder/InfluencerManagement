@@ -1,0 +1,40 @@
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+p {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--secondary-color);
+}
+
+.bar {
+  animation: bounce 1.5s infinite ease-in-out;
+  transform-origin: bottom;
+}
+
+.bar-1 {
+  animation-delay: 0s;
+}
+
+.bar-2 {
+  animation-delay: 0.2s;
+}
+
+.bar-3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.5);
+  }
+}
