@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -33,3 +33,7 @@ class SocialMediaAccount(Base):
     username = Column(String(50), nullable=False)
     influencer_id = Column(Integer, ForeignKey("influencers.id"))
     influencer = relationship("Influencer", back_populates="social_media_accounts")
+
+    __table_args__ = (
+            UniqueConstraint("platform", "username", name="unique_platform_username"),
+        )

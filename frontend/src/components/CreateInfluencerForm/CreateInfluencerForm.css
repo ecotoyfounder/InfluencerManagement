@@ -1,6 +1,6 @@
 .form,
-.sn-container,
-.sn-item {
+.platform-container,
+.platform-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,6 +15,12 @@
   justify-content: center;
 }
 
-.sn-item {
+.platform-item {
   flex-direction: row;
+}
+
+@media screen and (max-width: 740px) {
+  .platform-item {
+    flex-direction: column;
+  }
 }
