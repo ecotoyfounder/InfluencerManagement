@@ -14,7 +14,3 @@
   justify-content: space-between;
   align-items: center;
 }
-
-.remove-btn {
-  background-color: var(--red-color);
-}

@@ -4,7 +4,8 @@ import { SocialMediaPlatform } from '../../interfaces/SocialMedia';
 import Selector from '../Selector/Selector';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
-import './Form.css';
+import Modal from '../Modal/Modal';
+import './CreateInfluencerForm.css';
 
 interface InfluencerFormProps {
   label: string;
@@ -12,15 +13,21 @@ interface InfluencerFormProps {
     firstName: string;
     lastName: string;
     socialMediaAccounts: SocialMediaAccount[];
-  }) => void;
+  }) => Promise<void>;
 }
 
-const InfluencerForm: React.FC<InfluencerFormProps> = ({ label, onSubmit }) => {
+const CreateInfluencerForm: React.FC<InfluencerFormProps> = ({
+  label,
+  onSubmit,
+}) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [socialMediaAccounts, setSocialMediaAccounts] = useState<
     SocialMediaAccount[]
   >([{ platform: 'Instagram', username: '' }]);
+  const [error, setError] = useState<string | null>(null);
+  const [modalMessage, setModalMessage] = useState<string | null>(null);
+  const [isError, setIsError] = useState<boolean>(false);
 
   const addSocialMediaAccount = () => {
     setSocialMediaAccounts([
@@ -44,13 +51,48 @@ const InfluencerForm: React.FC<InfluencerFormProps> = ({ label, onSubmit }) => {
     setSocialMediaAccounts(updatedAccounts);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const hasDuplicateAccounts = (): boolean => {
+    const accounts = socialMediaAccounts.map((account) =>
+      `${account.platform}-${account.username}`.toLowerCase(),
+    );
+    const uniqueAccounts = new Set(accounts);
+    return uniqueAccounts.size !== accounts.length;
+  };
+
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!firstName || !lastName) {
-      alert('First Name and Last Name are required!');
+      setError('First Name and Last Name are required!');
       return;
     }
-    onSubmit({ firstName, lastName, socialMediaAccounts });
+    if (hasDuplicateAccounts()) {
+      setError('Duplicate social media accounts are not allowed!');
+      return;
+    }
+
+    try {
+      await onSubmit({ firstName, lastName, socialMediaAccounts });
+      setModalMessage('Influencer created successfully!');
+      setIsError(false);
+    } catch (err) {
+      setModalMessage(
+        (err as { message?: string }).message ||
+          'An error occurred while creating the influencer.',
+      );
+      setIsError(true);
+    }
+  };
+
+  const resetForm = () => {
+    setFirstName('');
+    setLastName('');
+    setSocialMediaAccounts([{ platform: 'Instagram', username: '' }]);
+    setError(null);
+  };
+
+  const closeModal = () => {
+    setModalMessage(null);
+    !isError && resetForm();
   };
 
   return (
@@ -70,10 +112,10 @@ const InfluencerForm: React.FC<InfluencerFormProps> = ({ label, onSubmit }) => {
         maxLength={50}
         required
       />
-      <div className="sn-container">
+      <div className="platform-container">
         <h3>Social Media Accounts</h3>
         {socialMediaAccounts.map((account, index) => (
-          <div key={index} className="sn-item">
+          <div key={index} className="platform-item">
             <Selector<SocialMediaPlatform>
               value={account.platform}
               options={['Instagram', 'TikTok']}
@@ -92,11 +134,18 @@ const InfluencerForm: React.FC<InfluencerFormProps> = ({ label, onSubmit }) => {
           Add Social Media Account
         </Button>
       </div>
+      {error && <p className="error">{error}</p>}
       <Button type="submit" className="primary-btn">
         Save
       </Button>
+      <Modal
+        title={isError ? 'Error' : 'Success'}
+        message={modalMessage || ''}
+        isVisible={!!modalMessage}
+        onClose={closeModal}
+      />
     </form>
   );
 };
 
-export default InfluencerForm;
+export default CreateInfluencerForm;

@@ -10,21 +10,25 @@ import {
 import { Influencer } from '../../interfaces/Influencer';
 import { Employee } from '../../interfaces/Employee';
 import InfluencerCard from '../../components/InfluencerCard/InfluencerCard';
-import Selector from '../../components/Selector/Selector';
+import AssignEmployee from '../../components/AssignEmployee/AssignEmployee';
 import Button from '../../components/Button/Button';
-import './InfluencerList.css';
 import Input from '../../components/Input/Input';
+import useFilteredInfluencers from '../../hooks/useFilteredInfluencers';
+import './InfluencerList.css';
+import Modal from '../../components/Modal/Modal';
 
 const InfluencerList: React.FC = () => {
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState<number | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>(''); // Для поиска
-  const [filteredInfluencers, setFilteredInfluencers] = useState<Influencer[]>(
-    [],
-  );
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [modalMessage, setModalMessage] = useState<string | null>(null);
+  const [selectedInfluencerId, setSelectedInfluencerId] = useState<
+    number | null
+  >(null);
+
+  const filteredInfluencers = useFilteredInfluencers(influencers, searchTerm);
 
   const updateInfluencerManager = (
     influencerId: number,
@@ -39,33 +43,36 @@ const InfluencerList: React.FC = () => {
     );
   };
 
-  const handleDeleteInfluencer = async (id: number) => {
+  const openDeleteModal = (id: number) => {
+    setSelectedInfluencerId(id);
+    setModalMessage('You are trying to delete this account. Are you sure?');
+  };
+
+  const handleDeleteInfluencer = async () => {
+    if (!selectedInfluencerId) return;
     try {
-      await deleteInfluencer(id);
+      await deleteInfluencer(selectedInfluencerId);
       setInfluencers((prev) =>
-        prev.filter((influencer) => influencer.id !== id),
+        prev.filter((influencer) => influencer.id !== selectedInfluencerId),
       );
-      alert('Influencer deleted successfully!');
-    } catch (err) {
-      console.error('Failed to delete influencer', err);
-      alert('Failed to delete influencer');
+      closeModal();
+    } catch (err: unknown) {
+      setModalMessage((err as Error).message || 'Failed to delete influencer');
+    } finally {
+      setSelectedInfluencerId(null);
     }
   };
 
-  const handleAssignEmployee = async (influencerId: number) => {
-    if (!selectedEmployee) {
-      alert('Please select an employee');
-      return;
-    }
-
+  const handleAssignEmployee = async (
+    influencerId: number,
+    employeeId: number,
+  ) => {
     try {
-      await assignEmployeeToInfluencer(influencerId, selectedEmployee);
-      const manager = employees.find((e) => e.id === selectedEmployee);
+      await assignEmployeeToInfluencer(influencerId, employeeId);
+      const manager = employees.find((e) => e.id === employeeId);
       updateInfluencerManager(influencerId, manager || null);
-      alert('Employee assigned successfully!');
     } catch (err) {
       console.error('Failed to assign employee', err);
-      alert('Failed to assign employee');
     }
   };
 
@@ -76,7 +83,6 @@ const InfluencerList: React.FC = () => {
           await Promise.all([getInfluencers(), getEmployees()]);
         setInfluencers(influencersData);
         setEmployees(employeesData);
-        setFilteredInfluencers(influencersData);
       } catch (err) {
         setError('Failed to fetch data');
       } finally {
@@ -87,35 +93,9 @@ const InfluencerList: React.FC = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const filtered = influencers.filter(
-      (influencer) =>
-        `${influencer.first_name} ${influencer.last_name}`
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        influencer.manager?.first_name
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        influencer.manager?.last_name
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()),
-    );
-    setFilteredInfluencers(filtered);
-  }, [searchTerm, influencers]);
-
-  const handleEmployeeChange = (name: string) => {
-    const selected = employees.find(
-      (e) => `${e.first_name} ${e.last_name}` === name,
-    );
-    setSelectedEmployee(selected ? selected.id : null);
-  };
-
-  const getSelectedEmployeeName = () => {
-    if (selectedEmployee) {
-      const employee = employees.find((e) => e.id === selectedEmployee);
-      return employee ? `${employee.first_name} ${employee.last_name}` : '';
-    }
-    return '';
+  const closeModal = () => {
+    setModalMessage(null);
+    setSelectedInfluencerId(null);
   };
 
   if (loading) {
@@ -142,20 +122,16 @@ const InfluencerList: React.FC = () => {
             <div key={influencer.id} className="item-container">
               <InfluencerCard influencer={influencer} />
               <div className="actions">
-                <Selector<string>
-                  value={getSelectedEmployeeName()}
-                  options={employees.map(
-                    (e) => `${e.first_name} ${e.last_name}`,
-                  )}
-                  onChange={handleEmployeeChange}
-                  placeholder="Select an employee ..."
+                <AssignEmployee
+                  employees={employees}
+                  influencerId={influencer.id}
+                  currentManager={influencer.manager}
+                  onAssign={handleAssignEmployee}
                 />
-                <Button onClick={() => handleAssignEmployee(influencer.id)}>
-                  Assign
-                </Button>
+
                 <Button
                   className="remove-btn"
-                  onClick={() => handleDeleteInfluencer(influencer.id)}
+                  onClick={() => openDeleteModal(influencer.id)}
                 >
                   Delete
                 </Button>
@@ -166,6 +142,15 @@ const InfluencerList: React.FC = () => {
           <p>No influencers found.</p>
         )}
       </div>
+      <Modal
+        title="Confirmation"
+        message={modalMessage || ''}
+        isVisible={!!modalMessage}
+        onClose={closeModal}
+        onConfirm={handleDeleteInfluencer}
+        confirmButtonLabel="Delete"
+        confirmButtonStyle="remove-btn"
+      />
     </div>
   );
 };

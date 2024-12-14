@@ -24,13 +24,22 @@ def get_influencers(
     """
     return filter_influencers(db, name, manager_id, manager_name)
 
-
-
 @router.post("/", response_model=InfluencerResponse)
 def create_influencer(influencer: InfluencerCreate, db: Session = Depends(get_db)):
     """
     Add a new influencer to the database.
     """
+    for account in influencer.social_media_accounts:
+            existing_account = db.query(SocialMediaAccount).filter(
+                SocialMediaAccount.platform == account.platform,
+                SocialMediaAccount.username == account.username
+            ).first()
+            if existing_account:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Social media account {account.platform} with username {account.username} already exists.",
+                )
+
     db_influencer = Influencer(
         first_name=influencer.first_name,
         last_name=influencer.last_name

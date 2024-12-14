@@ -1,6 +1,6 @@
 import React from 'react';
 import { createInfluencer } from '../../services/influencerService';
-import Form from '../../components/Form/Form';
+import Form from '../../components/CreateInfluencerForm/CreateInfluencerForm';
 
 const CreateInfluencer: React.FC = () => {
   const handleSubmit = async (data: {
@@ -17,13 +17,7 @@ const CreateInfluencer: React.FC = () => {
       social_media_accounts: data.socialMediaAccounts,
     };
 
-    try {
-      await createInfluencer(payload);
-      alert('Influencer created successfully!');
-    } catch (error) {
-      console.error('Error creating influencer:', error);
-      alert('Error creating influencer');
-    }
+    await createInfluencer(payload);
   };
 
   return <Form label="Create Influencer" onSubmit={handleSubmit} />;

@@ -14,3 +14,12 @@
 .btn:hover {
   filter: brightness(70%);
 }
+
+.success-btn {
+  background-color: var(--yellow-color);
+  color: var(--main-color);
+}
+
+.remove-btn {
+  background-color: var(--red-color);
+}
