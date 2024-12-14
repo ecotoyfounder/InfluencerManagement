@@ -6,6 +6,7 @@ import {
 import {
   getEmployees,
   assignEmployeeToInfluencer,
+  unassignEmployeeToInfluencer,
 } from '../../services/employeeService';
 import { Influencer } from '../../interfaces/Influencer';
 import { Employee } from '../../interfaces/Employee';
@@ -83,6 +84,15 @@ const InfluencerList: React.FC = () => {
     }
   };
 
+  const handleUnassignEmployee = async (influencerId: number) => {
+    try {
+      await unassignEmployeeToInfluencer(influencerId);
+      updateInfluencerManager(influencerId, null);
+    } catch (err) {
+      console.error('Failed to unassign manager', err);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -132,6 +142,7 @@ const InfluencerList: React.FC = () => {
                       influencerId={influencer.id}
                       currentManager={influencer.manager}
                       onAssign={handleAssignEmployee}
+                      onUnassign={handleUnassignEmployee}
                     />
                     <Button
                       className="remove-btn"

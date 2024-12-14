@@ -130,3 +130,20 @@ def assign_manager(
     db.commit()
     db.refresh(influencer)
     return {"message": f"Manager with ID {manager_id} assigned to influencer with ID {id}"}
+
+@router.post("/{id}/unassign")
+def unassign_manager(id: int, db: Session = Depends(get_db)):
+    """
+    Unassign the manager from an influencer.
+    """
+    influencer = db.query(Influencer).filter(Influencer.id == id).first()
+    if not influencer:
+        raise HTTPException(status_code=404, detail="Influencer not found")
+
+    if not influencer.manager_id:
+        raise HTTPException(status_code=400, detail="Influencer has no assigned manager")
+
+    influencer.manager_id = None
+    db.commit()
+    db.refresh(influencer)
+    return {"message": f"Manager unassigned from influencer with ID {id}"}

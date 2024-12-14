@@ -10,6 +10,7 @@ interface AssignEmployeeProps {
   influencerId: number;
   currentManager?: Employee | null;
   onAssign: (influencerId: number, employeeId: number) => void;
+  onUnassign: (influencerId: number) => void;
 }
 
 const AssignEmployee: React.FC<AssignEmployeeProps> = ({
@@ -17,6 +18,7 @@ const AssignEmployee: React.FC<AssignEmployeeProps> = ({
   influencerId,
   currentManager,
   onAssign,
+  onUnassign,
 }) => {
   const [selectedEmployee, setSelectedEmployee] = useState<number | null>(
     currentManager?.id || null,
@@ -61,6 +63,29 @@ const AssignEmployee: React.FC<AssignEmployeeProps> = ({
     }
   };
 
+  const handleUnassign = () => {
+    if (currentManager) {
+      setModalMessage('Are you sure you want to unassign the current manager?');
+      setOnConfirm(() => confirmUnassign);
+      setIsModalVisible(true);
+    }
+  };
+
+  const confirmUnassign = async () => {
+    try {
+      await onUnassign(influencerId);
+      setModalMessage('Manager unassigned successfully!');
+      setOnConfirm(undefined);
+      setSelectedEmployee(null);
+    } catch (err: unknown) {
+      setModalMessage(
+        (err as { message?: string }).message || 'Failed to unassign manager',
+      );
+    } finally {
+      setIsModalVisible(true);
+    }
+  };
+
   const closeModal = () => {
     setModalMessage(null);
     setIsModalVisible(false);
@@ -88,6 +113,13 @@ const AssignEmployee: React.FC<AssignEmployeeProps> = ({
         placeholder="Select an employee ..."
       />
       <Button onClick={handleAssign}>Assign</Button>
+      <Button
+        onClick={handleUnassign}
+        disabled={!currentManager}
+        className="warning"
+      >
+        Unassign
+      </Button>
       <Modal
         title="Confirmation"
         message={modalMessage || ''}

@@ -18,3 +18,7 @@ a {
 a:hover {
   filter: brightness(70%);
 }
+
+.warning {
+  background-color: var(--warning-color);
+}
