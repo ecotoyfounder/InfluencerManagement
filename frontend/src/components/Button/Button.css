@@ -15,6 +15,15 @@
   filter: brightness(70%);
 }
 
+.btn:disabled {
+  cursor: auto;
+  background-color: var(--box-background-color);
+}
+
+.btn:disabled:hover {
+  filter: brightness(100%);
+}
+
 .success-btn {
   background-color: var(--yellow-color);
   color: var(--main-color);

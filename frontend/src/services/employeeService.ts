@@ -24,3 +24,19 @@ export const assignEmployeeToInfluencer = async (
     throw new Error('Failed to assign employee');
   }
 };
+
+export const unassignEmployeeToInfluencer = async (
+  influencerId: number,
+): Promise<void> => {
+  const response = await fetch(
+    `${API_URL}/influencers/${influencerId}/unassign`,
+    {
+      method: 'POST',
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Failed to unassign manager');
+  }
+};
