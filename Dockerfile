@@ -24,7 +24,10 @@ FROM python:3.9
 # Copy backend files
 WORKDIR /backend
 COPY backend/ /backend
-COPY --from=python-base /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+
+# Install Python dependencies again in the final stage
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy frontend build to the static folder in the backend
 COPY --from=node-base /frontend/build /backend/static
