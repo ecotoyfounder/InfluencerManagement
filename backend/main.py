@@ -41,7 +41,7 @@ def startup_event():
 app.include_router(influencers.router, prefix="/influencers", tags=["Influencers"])
 app.include_router(employees.router, prefix="/employees", tags=["Employees"])
 
-@app.get("/")
+@app.get("/{full_path:path}")
 def serve_frontend():
     """
     Serve the React index.html file for the root endpoint.
