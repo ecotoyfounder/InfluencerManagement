@@ -2,11 +2,14 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Read DATABASE_URL from environment variables or use a default local value
-DATABASE_URL = os.getenv("MYSQL_URL", "mysql+mysqlconnector://root:@localhost/influencer_management")
+# Read MYSQL_URL from environment variables or use a local default
+raw_database_url = os.getenv("MYSQL_URL", "mysql+mysqlconnector://root:@localhost/influencer_management")
 
-if not DATABASE_URL:
-    raise ValueError("MYSQL_URL environment variable is not set")
+# Replace prefix only if MYSQL_URL is provided via Railway
+if "mysql://" in raw_database_url:
+    DATABASE_URL = raw_database_url.replace("mysql://", "mysql+mysqlconnector://")
+else:
+    DATABASE_URL = raw_database_url
 
 # Create the SQLAlchemy engine
 engine = create_engine(DATABASE_URL)
