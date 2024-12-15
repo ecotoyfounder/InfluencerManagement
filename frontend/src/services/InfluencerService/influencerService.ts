@@ -1,4 +1,4 @@
-import { Influencer, InfluencerPayload } from '../interfaces/Influencer';
+import { Influencer, InfluencerPayload } from '../../interfaces/Influencer';
 
 const API_URL = 'http://127.0.0.1:8000';
 
