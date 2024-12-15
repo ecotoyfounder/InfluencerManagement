@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from utils.seeder import seed_employees
 from routers import influencers, employees
-from database import SessionLocal
+from database import SessionLocal, Base, engine
 
 app = FastAPI()
 
@@ -20,6 +20,8 @@ def startup_event():
     """
     Seed initial employees on startup.
     """
+    # Create all tables
+    Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
         seed_employees(db)
