@@ -18,8 +18,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve the React build folder as static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Serve the React build folder as static files (only if it exists)
+static_directory = os.path.join(os.path.dirname(__file__), "static")
+
+if os.path.exists(static_directory):
+    app.mount("/static", StaticFiles(directory=static_directory), name="static")
 
 @app.on_event("startup")
 def startup_event():
@@ -43,4 +46,7 @@ def serve_frontend():
     """
     Serve the React index.html file for the root endpoint.
     """
-    return FileResponse(os.path.join("static", "index.html"))
+    index_file = os.path.join(static_directory, "index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    return {"message": "Backend is running, but no static files found. React app runs separately on localhost:3000."}
