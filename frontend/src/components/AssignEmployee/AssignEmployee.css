@@ -1,5 +1,12 @@
-.assign-employee {
+.assign-employee,
+.assign-actions {
   display: flex;
   gap: 14px;
   align-items: center;
+}
+
+@media screen and (max-width: 1080px) {
+  .assign-employee {
+    flex-direction: column-reverse;
+  }
 }

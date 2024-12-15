@@ -112,14 +112,16 @@ const AssignEmployee: React.FC<AssignEmployeeProps> = ({
         onChange={handleEmployeeChange}
         placeholder="Select an employee ..."
       />
-      <Button onClick={handleAssign}>Assign</Button>
-      <Button
-        onClick={handleUnassign}
-        disabled={!currentManager}
-        className="warning"
-      >
-        Unassign
-      </Button>
+      <div className="assign-actions">
+        <Button onClick={handleAssign}>Assign</Button>
+        <Button
+          onClick={handleUnassign}
+          disabled={!currentManager}
+          className="warning"
+        >
+          Unassign
+        </Button>
+      </div>
       <Modal
         title="Confirmation"
         message={modalMessage || ''}

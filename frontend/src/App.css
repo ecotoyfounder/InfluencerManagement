@@ -18,6 +18,7 @@
 .main-container {
   grid-row: 2;
   padding: 30px;
-  overflow-y: auto;
+  overflow: hidden;
   background-color: var(--light-color);
+  gap: 30px;
 }
