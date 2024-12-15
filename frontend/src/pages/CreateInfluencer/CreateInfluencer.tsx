@@ -1,5 +1,5 @@
 import React from 'react';
-import { createInfluencer } from '../../services/influencerService';
+import { createInfluencer } from '../../services/InfluencerService/influencerService';
 import Form from '../../components/CreateInfluencerForm/CreateInfluencerForm';
 
 const CreateInfluencer: React.FC = () => {

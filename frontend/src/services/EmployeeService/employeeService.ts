@@ -1,4 +1,4 @@
-import { Employee } from '../interfaces/Employee';
+import { Employee } from '../../interfaces/Employee';
 
 const API_URL = 'http://127.0.0.1:8000';
 

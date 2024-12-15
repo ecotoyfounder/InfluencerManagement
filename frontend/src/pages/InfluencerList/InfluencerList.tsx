@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import {
   deleteInfluencer,
   getInfluencers,
-} from '../../services/influencerService';
+} from '../../services/InfluencerService/influencerService';
 import {
   getEmployees,
   assignEmployeeToInfluencer,
   unassignEmployeeToInfluencer,
-} from '../../services/employeeService';
+} from '../../services/EmployeeService/employeeService';
 import { Influencer } from '../../interfaces/Influencer';
 import { Employee } from '../../interfaces/Employee';
 import InfluencerCard from '../../components/InfluencerCard/InfluencerCard';
