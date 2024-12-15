@@ -10,6 +10,13 @@ body {
   font-size: 14px;
 }
 
+h2 {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 a {
   text-decoration: none;
   transition: filter 0.3s;
@@ -17,6 +24,12 @@ a {
 
 a:hover {
   filter: brightness(70%);
+}
+
+hr {
+  background-color: var(--box-background-color);
+  height: 1px;
+  border: none;
 }
 
 .warning {

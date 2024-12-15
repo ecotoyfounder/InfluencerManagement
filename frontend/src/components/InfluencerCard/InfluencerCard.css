@@ -18,3 +18,9 @@
   border-radius: 4px;
   padding: 8px;
 }
+
+@media screen and (max-width: 440px) {
+  .card {
+    width: 280px;
+  }
+}

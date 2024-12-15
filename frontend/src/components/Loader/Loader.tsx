@@ -35,7 +35,7 @@ const Loader: React.FC = () => {
           className="bar bar-3"
         />
       </svg>
-      <p>Loading...</p>
+      <p className="loader-text">Loading...</p>
     </div>
   );
 };

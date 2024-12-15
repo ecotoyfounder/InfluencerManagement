@@ -5,11 +5,11 @@
   gap: 6px;
 }
 
-p {
+.loader-text {
   font-family: Arial, sans-serif;
   font-size: 16px;
   font-weight: 600;
-  color: var(--secondary-color);
+  color: var(--light-color);
 }
 
 .bar {
