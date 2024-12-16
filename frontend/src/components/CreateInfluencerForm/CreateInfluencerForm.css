@@ -9,7 +9,6 @@
 }
 
 .form {
-  padding: 30px;
   border-radius: 8px;
   border: solid 1px var(--box-background-color);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
@@ -17,6 +16,7 @@
 }
 
 .form-content {
+  padding: 30px;
   max-height: 50vh;
   overflow-y: auto;
 }

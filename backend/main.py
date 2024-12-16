@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -7,6 +8,10 @@ from routers import influencers, employees
 from database import SessionLocal, Base, engine
 
 app = FastAPI()
+
+# Redirect HTTP to HTTPS Middleware (только для продакшн)
+if os.getenv("ENV") == "production":
+    app.add_middleware(HTTPSRedirectMiddleware)
 
 # CORS Middleware
 app.add_middleware(
