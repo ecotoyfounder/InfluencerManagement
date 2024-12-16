@@ -24,6 +24,8 @@ const useFilteredInfluencers = (
             .includes(searchTerm.toLowerCase()),
       );
       setFilteredInfluencers(filtered);
+    } else {
+      setFilteredInfluencers([]);
     }
   }, [searchTerm, influencers]);
 

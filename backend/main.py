@@ -11,7 +11,7 @@ app = FastAPI()
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://influencermanagement-production.up.railway.app/"],  # Adjust this for production
+    allow_origins=["*"],  # Adjust this for production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
