@@ -10,7 +10,7 @@ const useFilteredInfluencers = (
   );
 
   useEffect(() => {
-    if (influencers.length > 0) {
+    if (influencers.length !== 0) {
       const filtered = influencers.filter(
         (influencer) =>
           `${influencer.first_name} ${influencer.last_name}`
