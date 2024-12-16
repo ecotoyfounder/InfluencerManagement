@@ -97,53 +97,55 @@ const CreateInfluencerForm: React.FC<InfluencerFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="form">
-      <h1>{label}</h1>
-      <Input
-        label="First Name:"
-        value={firstName}
-        onChange={setFirstName}
-        maxLength={50}
-        required
-      />
-      <Input
-        label="Last Name:"
-        value={lastName}
-        onChange={setLastName}
-        maxLength={50}
-        required
-      />
-      <div className="platform-container">
-        <h3>Social Media Accounts</h3>
-        {socialMediaAccounts.map((account, index) => (
-          <div key={index} className="platform-item">
-            <Selector<SocialMediaPlatform>
-              value={account.platform}
-              options={['Instagram', 'TikTok']}
-              onChange={(platform) => handlePlatformChange(index, platform)}
-              placeholder="Select a platform ..."
-            />
-            <Input
-              placeholder="Username"
-              value={account.username}
-              onChange={(username) => handleUsernameChange(index, username)}
-              required
-            />
-          </div>
-        ))}
-        <Button onClick={addSocialMediaAccount} type="button">
-          Add Social Media Account
+      <div className="form-content">
+        <h1>{label}</h1>
+        <Input
+          label="First Name:"
+          value={firstName}
+          onChange={setFirstName}
+          maxLength={50}
+          required
+        />
+        <Input
+          label="Last Name:"
+          value={lastName}
+          onChange={setLastName}
+          maxLength={50}
+          required
+        />
+        <div className="platform-container">
+          <h3>Social Media Accounts</h3>
+          {socialMediaAccounts.map((account, index) => (
+            <div key={index} className="platform-item">
+              <Selector<SocialMediaPlatform>
+                value={account.platform}
+                options={['Instagram', 'TikTok']}
+                onChange={(platform) => handlePlatformChange(index, platform)}
+                placeholder="Select a platform ..."
+              />
+              <Input
+                placeholder="Username"
+                value={account.username}
+                onChange={(username) => handleUsernameChange(index, username)}
+                required
+              />
+            </div>
+          ))}
+          <Button onClick={addSocialMediaAccount} type="button">
+            Add Social Media Account
+          </Button>
+        </div>
+        {error && <p className="error">{error}</p>}
+        <Button type="submit" className="primary-btn">
+          Save
         </Button>
+        <Modal
+          title={isError ? 'Error' : 'Success'}
+          message={modalMessage || ''}
+          isVisible={!!modalMessage}
+          onClose={closeModal}
+        />
       </div>
-      {error && <p className="error">{error}</p>}
-      <Button type="submit" className="primary-btn">
-        Save
-      </Button>
-      <Modal
-        title={isError ? 'Error' : 'Success'}
-        message={modalMessage || ''}
-        isVisible={!!modalMessage}
-        onClose={closeModal}
-      />
     </form>
   );
 };

@@ -8,6 +8,7 @@ from typing import List
 
 router = APIRouter()
 
+
 @router.get("/", response_model=List[InfluencerResponse])
 def get_influencers(
     name: str = None,
@@ -22,7 +23,11 @@ def get_influencers(
     - **manager_id**: Filter influencers by the ID of their assigned manager.
     - **manager_name**: Filter influencers by the name of their assigned manager.
     """
-    return filter_influencers(db, name, manager_id, manager_name)
+    influencers = filter_influencers(db, name, manager_id, manager_name)
+    if not influencers:
+        return []
+    return influencers
+
 
 @router.post("/", response_model=InfluencerResponse)
 def create_influencer(influencer: InfluencerCreate, db: Session = Depends(get_db)):
@@ -30,19 +35,22 @@ def create_influencer(influencer: InfluencerCreate, db: Session = Depends(get_db
     Add a new influencer to the database.
     """
     for account in influencer.social_media_accounts:
-            existing_account = db.query(SocialMediaAccount).filter(
+        existing_account = (
+            db.query(SocialMediaAccount)
+            .filter(
                 SocialMediaAccount.platform == account.platform,
-                SocialMediaAccount.username == account.username
-            ).first()
-            if existing_account:
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Social media account {account.platform} with username {account.username} already exists.",
-                )
+                SocialMediaAccount.username == account.username,
+            )
+            .first()
+        )
+        if existing_account:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Social media account {account.platform} with username {account.username} already exists.",
+            )
 
     db_influencer = Influencer(
-        first_name=influencer.first_name,
-        last_name=influencer.last_name
+        first_name=influencer.first_name, last_name=influencer.last_name
     )
     db.add(db_influencer)
     db.commit()
@@ -60,7 +68,6 @@ def create_influencer(influencer: InfluencerCreate, db: Session = Depends(get_db
     db.refresh(db_influencer)
 
     return db_influencer
-
 
 
 @router.get("/{id}", response_model=InfluencerResponse)
@@ -105,12 +112,9 @@ def delete_influencer(id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": f"Influencer with ID {id} deleted successfully"}
 
+
 @router.post("/{id}/assign")
-def assign_manager(
-    id: int,
-    data: dict,
-    db: Session = Depends(get_db)
-):
+def assign_manager(id: int, data: dict, db: Session = Depends(get_db)):
     """
     Assign a manager to an influencer.
     """
@@ -129,7 +133,10 @@ def assign_manager(
     influencer.manager_id = manager.id
     db.commit()
     db.refresh(influencer)
-    return {"message": f"Manager with ID {manager_id} assigned to influencer with ID {id}"}
+    return {
+        "message": f"Manager with ID {manager_id} assigned to influencer with ID {id}"
+    }
+
 
 @router.post("/{id}/unassign")
 def unassign_manager(id: int, db: Session = Depends(get_db)):
@@ -141,7 +148,9 @@ def unassign_manager(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Influencer not found")
 
     if not influencer.manager_id:
-        raise HTTPException(status_code=400, detail="Influencer has no assigned manager")
+        raise HTTPException(
+            status_code=400, detail="Influencer has no assigned manager"
+        )
 
     influencer.manager_id = None
     db.commit()

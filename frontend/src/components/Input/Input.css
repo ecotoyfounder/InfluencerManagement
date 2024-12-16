@@ -22,3 +22,9 @@
     width: 280px;
   }
 }
+
+@media screen and (max-width: 380px) {
+  .input {
+    width: 220px;
+  }
+}

@@ -7,6 +7,7 @@ from typing import List
 
 router = APIRouter()
 
+
 # Employee Endpoints
 @router.get("/", response_model=List[EmployeeResponse])
 def get_employees(db: Session = Depends(get_db)):
@@ -14,4 +15,6 @@ def get_employees(db: Session = Depends(get_db)):
     Get the list of all employees.
     """
     employees = db.query(Employee).distinct().all()
+    if not employees:
+        return []
     return employees
