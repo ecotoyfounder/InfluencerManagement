@@ -1,5 +1,4 @@
 .nav-container {
-  padding: 24px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -19,4 +18,18 @@
 
 .active-link {
   color: var(--yellow-color);
+}
+
+@media screen and (max-width: 740px) {
+  .nav-container {
+    flex-direction: column;
+  }
+
+  .link-container {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    font-size: 1.1rem;
+    justify-content: space-between;
+  }
 }

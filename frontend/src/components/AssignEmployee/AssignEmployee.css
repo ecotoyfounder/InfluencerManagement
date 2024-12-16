@@ -10,3 +10,10 @@
     flex-direction: column-reverse;
   }
 }
+
+@media screen and (max-width: 740px) {
+  .assign-employee,
+  .assign-actions {
+    width: 100%;
+  }
+}

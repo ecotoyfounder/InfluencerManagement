@@ -17,14 +17,9 @@
   outline: solid 1px var(--secondary-color);
 }
 
-@media screen and (max-width: 440px) {
+@media screen and (max-width: 740px) {
+  .input-container,
   .input {
-    width: 280px;
-  }
-}
-
-@media screen and (max-width: 380px) {
-  .input {
-    width: 220px;
+    width: 100%;
   }
 }

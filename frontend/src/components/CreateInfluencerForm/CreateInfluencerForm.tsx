@@ -25,11 +25,24 @@ const CreateInfluencerForm: React.FC<InfluencerFormProps> = ({
   const [socialMediaAccounts, setSocialMediaAccounts] = useState<
     SocialMediaAccount[]
   >([{ platform: 'Instagram', username: '' }]);
-  const [error, setError] = useState<string | null>(null);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
   const [isError, setIsError] = useState<boolean>(false);
 
   const addSocialMediaAccount = () => {
+    const existingPlatforms = socialMediaAccounts.map(
+      (account) => account.platform,
+    );
+
+    const duplicatePlatform = existingPlatforms.find(
+      (platform, index, arr) => arr.indexOf(platform) !== index,
+    );
+
+    if (duplicatePlatform) {
+      setModalMessage(`A profile for ${duplicatePlatform} already exists!`);
+      setIsError(true);
+      return;
+    }
+
     setSocialMediaAccounts([
       ...socialMediaAccounts,
       { platform: 'Instagram', username: '' },
@@ -62,11 +75,11 @@ const CreateInfluencerForm: React.FC<InfluencerFormProps> = ({
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!firstName || !lastName) {
-      setError('First Name and Last Name are required!');
+      setModalMessage('First Name and Last Name are required!');
       return;
     }
     if (hasDuplicateAccounts()) {
-      setError('Duplicate social media accounts are not allowed!');
+      setModalMessage('Duplicate social media accounts are not allowed!');
       return;
     }
 
@@ -87,7 +100,6 @@ const CreateInfluencerForm: React.FC<InfluencerFormProps> = ({
     setFirstName('');
     setLastName('');
     setSocialMediaAccounts([{ platform: 'Instagram', username: '' }]);
-    setError(null);
   };
 
   const closeModal = () => {
@@ -131,11 +143,14 @@ const CreateInfluencerForm: React.FC<InfluencerFormProps> = ({
               />
             </div>
           ))}
-          <Button onClick={addSocialMediaAccount} type="button">
+          <Button
+            onClick={addSocialMediaAccount}
+            type="button"
+            disabled={socialMediaAccounts.length >= 2}
+          >
             Add Social Media Account
           </Button>
         </div>
-        {error && <p className="error">{error}</p>}
         <Button type="submit" className="primary-btn">
           Save
         </Button>
