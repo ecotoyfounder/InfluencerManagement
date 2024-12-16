@@ -14,9 +14,13 @@ WORKDIR /frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm install --legacy-peer-deps
 
-# Copy the rest of the frontend files and build
+# Inject production API URL dynamically
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
+
+# Build React app with correct API URL
 COPY frontend/ ./
-RUN npm run build
+RUN REACT_APP_API_URL=${REACT_APP_API_URL} npm run build
 
 # Final application setup
 FROM python:3.9
