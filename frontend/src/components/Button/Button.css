@@ -54,3 +54,9 @@
   right: 0;
   margin: auto;
 }
+
+@media screen and (max-width: 740px) {
+  .btn {
+    width: 100%;
+  }
+}

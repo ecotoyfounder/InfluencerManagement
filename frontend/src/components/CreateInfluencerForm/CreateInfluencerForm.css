@@ -25,10 +25,22 @@
 }
 
 @media screen and (max-width: 740px) {
+  .form {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+
   .form-content {
-    padding: 30px;
+    padding: 0;
     max-height: 60vh;
     overflow-y: auto;
+    width: 100%;
+  }
+
+  .platform-container,
+  .platform-item {
+    width: 100%;
   }
 
   .platform-item {

@@ -22,3 +22,10 @@
   background-color: var(--light-color);
   gap: 30px;
 }
+
+@media screen and (max-width: 740px) {
+  .nav-container,
+  .main-container {
+    padding: 20px;
+  }
+}

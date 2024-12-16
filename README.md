@@ -1,5 +1,7 @@
 # Influencer Management Web Application
 
+**Live Demo**: [Influencer Management App](https://influencer-management-up08.onrender.com/)
+
 ---
 
 ## Overview
@@ -13,15 +15,15 @@ The **Influencer Management Application** is a full-stack web application design
 ### Core Requirements (as per Technical Assignment):
 
 - **Create a New Influencer**
-  - Add first name and last name (up to 50 characters).
-  - Add multiple Instagram or TikTok usernames.
-  - Prevent duplicate social media accounts for a single influencer.
+    - Add first name and last name (up to 50 characters).
+    - Add multiple Instagram or TikTok usernames.
+    - Prevent duplicate social media accounts for a single influencer.
 - **List Influencers**
-  - Display first name, last name, social media accounts, and manager details.
-  - Assign or unassign an employee as the manager for an influencer.
-  - Filter influencers by name or assigned manager.
+    - Display first name, last name, social media accounts, and manager details.
+    - Assign or unassign an employee as the manager for an influencer.
+    - Filter influencers by name or assigned manager.
 - **API-Based Filtering**
-  - Records are filtered via backend API.
+    - Records are filtered via backend API.
 
 ### Additional Features:
 
@@ -32,8 +34,9 @@ The **Influencer Management Application** is a full-stack web application design
 5. **Error Handling**: Consistent error handling for API calls and form validations.
 6. **Reusable Components**: All UI components (e.g., buttons, inputs, selectors, modals) are modular and reusable.
 7. **Testing**:
-   - Frontend: Tested with **Jest** and **@testing-library/react**.
-   - Backend: Tested with **Pytest**.
+    - Frontend: Tested with **Jest** and **@testing-library/react**.
+    - Backend: Tested with **Pytest**.
+8. **Deployment**: Production-ready deployment hosted on [Render](https://render.com/).
 
 ---
 
@@ -96,11 +99,11 @@ cd influencer-management
    pip install -r requirements.txt
    ```
 3. Set up the database:
-   - Create a MySQL database.
-   - Update the `DATABASE_URL` in `backend/.env`:
-     ```bash
-     DATABASE_URL="mysql+mysqlconnector://username:password@localhost/influencer_management"
-     ```
+    - Create a MySQL database.
+    - Update the `DATABASE_URL` in `backend/.env`:
+      ```bash
+      DATABASE_URL="mysql+mysqlconnector://username:password@localhost/influencer_management"
+      ```
 4. Run database migrations:
    ```bash
    alembic upgrade head
@@ -156,6 +159,20 @@ npm test
 
 ---
 
+## Deployment
+
+The project is deployed to **Railway** and accessible via this URL:
+[https://influencer-management-up08.onrender.com/](https://influencer-management-up08.onrender.com/)
+
+### Steps to Deploy (Dockerized):
+
+1. Push the code to your repository.
+2. Connect the repository to **Railway**.
+3. Add the environment variables (e.g., `DATABASE_URL`).
+4. Redeploy the project.
+
+---
+
 ## Screenshots
 
 - **Create Influencer Page**
@@ -172,4 +189,7 @@ This project demonstrates a robust full-stack application with clear separation 
 
 ---
 
+**Live Demo**: [https://influencer-management-up08.onrender.com/](https://influencer-management-up08.onrender.com/)
+
 Feel free to contribute or provide feedback!
+
