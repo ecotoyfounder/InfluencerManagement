@@ -53,7 +53,7 @@ const AssignEmployee: React.FC<AssignEmployeeProps> = ({
       setModalMessage('Employee assigned successfully!');
       setIsError(false);
       setOnConfirm(undefined);
-    } catch (err: unknown) {
+    } catch (err) {
       setModalMessage(
         (err as { message?: string }).message || 'Failed to assign employee',
       );
