@@ -32,5 +32,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy frontend build to the static folder in the backend
 COPY --from=node-base /frontend/build /backend/static
 
-# Command to start the backend
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Command to start the backend with dynamic port
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "${PORT}"]
