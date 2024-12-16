@@ -17,7 +17,6 @@
 
 .form-content {
   padding: 30px;
-  max-height: 50vh;
   overflow-y: auto;
 }
 
@@ -26,6 +25,12 @@
 }
 
 @media screen and (max-width: 740px) {
+  .form-content {
+    padding: 30px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
   .platform-item {
     flex-direction: column;
   }
