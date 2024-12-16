@@ -1,7 +1,5 @@
 # Influencer Management Web Application
 
-**Live Demo**: [Influencer Management App](https://influencermanagement-production.up.railway.app/)
-
 ---
 
 ## Overview
@@ -36,7 +34,6 @@ The **Influencer Management Application** is a full-stack web application design
 7. **Testing**:
    - Frontend: Tested with **Jest** and **@testing-library/react**.
    - Backend: Tested with **Pytest**.
-8. **Deployment**: Production-ready deployment hosted on [Railway](https://railway.app).
 
 ---
 
@@ -159,20 +156,6 @@ npm test
 
 ---
 
-## Deployment
-
-The project is deployed to **Railway** and accessible via this URL:
-[https://influencermanagement-production.up.railway.app/](https://influencermanagement-production.up.railway.app/)
-
-### Steps to Deploy (Dockerized):
-
-1. Push the code to your repository.
-2. Connect the repository to **Railway**.
-3. Add the environment variables (e.g., `DATABASE_URL`).
-4. Redeploy the project.
-
----
-
 ## Screenshots
 
 - **Create Influencer Page**
@@ -188,7 +171,5 @@ The project is deployed to **Railway** and accessible via this URL:
 This project demonstrates a robust full-stack application with clear separation of concerns, responsive UI/UX, and production-ready deployment. Additional features like error handling, reusable components, and testing ensure high-quality code and usability.
 
 ---
-
-**Live Demo**: [https://influencermanagement-production.up.railway.app/](https://influencermanagement-production.up.railway.app/)
 
 Feel free to contribute or provide feedback!
