@@ -65,7 +65,8 @@ const InfluencerList: React.FC = () => {
       );
       closeModal();
     } catch (err) {
-      handleError('Failed to delete influencer', err);
+      console.error(err);
+      setModalMessage('Failed to delete influencer');
     } finally {
       setSelectedInfluencerId(null);
     }
