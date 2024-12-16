@@ -8,6 +8,7 @@ __pycache__/
 node_modules/
 *.log
 .env
+.env.production
 
 # macOS
 .DS_Store
