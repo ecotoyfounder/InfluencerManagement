@@ -14,3 +14,9 @@ node_modules/
 
 # React Build
 **/build/
+
+# Static files for backend
+backend/static/
+
+# Alembic migrations (versions folder)
+backend/alembic/versions/
