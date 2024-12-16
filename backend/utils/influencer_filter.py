@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 from models import Influencer, Employee
 
+
 def filter_influencers(
     db: Session,
     name: str = None,
@@ -17,14 +18,13 @@ def filter_influencers(
     :return: A list of filtered influencers with social media accounts loaded.
     """
     query = db.query(Influencer).options(
-            joinedload(Influencer.social_media_accounts),
-            joinedload(Influencer.manager),
-        )
+        joinedload(Influencer.social_media_accounts),
+        joinedload(Influencer.manager),
+    )
 
     if name:
         query = query.filter(
-            Influencer.first_name.contains(name) |
-            Influencer.last_name.contains(name)
+            Influencer.first_name.contains(name) | Influencer.last_name.contains(name)
         )
 
     if manager_id:
@@ -32,8 +32,8 @@ def filter_influencers(
 
     if manager_name:
         query = query.join(Employee).filter(
-            Employee.first_name.contains(manager_name) |
-            Employee.last_name.contains(manager_name)
+            Employee.first_name.contains(manager_name)
+            | Employee.last_name.contains(manager_name)
         )
 
     return query.all()

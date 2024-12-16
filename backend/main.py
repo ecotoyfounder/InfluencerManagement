@@ -17,6 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Database setup
 @app.on_event("startup")
 def startup_event():
@@ -31,11 +32,13 @@ def startup_event():
     finally:
         db.close()
 
+
 # Include Routers for API
 app.include_router(influencers.router, prefix="/influencers", tags=["Influencers"])
 app.include_router(employees.router, prefix="/employees", tags=["Employees"])
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 @app.get("/")
 async def serve_frontend():

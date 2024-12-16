@@ -11,6 +11,7 @@ DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 # Override get_db dependency with the test database
 def override_get_db():
     db = TestingSessionLocal()
@@ -19,10 +20,12 @@ def override_get_db():
     finally:
         db.close()
 
+
 app.dependency_overrides[get_db] = override_get_db
 
 # Create a test client
 client = TestClient(app)
+
 
 @pytest.fixture(scope="module")
 def setup_database():
@@ -32,6 +35,7 @@ def setup_database():
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
+
 
 @pytest.fixture()
 def db_session():
@@ -44,6 +48,7 @@ def db_session():
     finally:
         session.close()
 
+
 def test_create_influencer(setup_database):
     """
     Test creating a new influencer.
@@ -53,8 +58,8 @@ def test_create_influencer(setup_database):
         "last_name": "Doe",
         "social_media_accounts": [
             {"platform": "Instagram", "username": "john_doe"},
-            {"platform": "Twitter", "username": "johndoe123"}
-        ]
+            {"platform": "Twitter", "username": "johndoe123"},
+        ],
     }
     response = client.post("/influencers/", json=payload)
     assert response.status_code == 200
@@ -62,6 +67,7 @@ def test_create_influencer(setup_database):
     assert data["first_name"] == "John"
     assert data["last_name"] == "Doe"
     assert len(data["social_media_accounts"]) == 2
+
 
 def test_get_influencers(setup_database, db_session):
     """
@@ -78,6 +84,7 @@ def test_get_influencers(setup_database, db_session):
     assert len(data) >= 1
     assert any(item["first_name"] == "Alice" for item in data)
 
+
 def test_get_influencer_by_id(setup_database, db_session):
     """
     Test retrieving an influencer by ID.
@@ -92,6 +99,7 @@ def test_get_influencer_by_id(setup_database, db_session):
     assert data["first_name"] == "Bob"
     assert data["last_name"] == "Brown"
 
+
 def test_update_influencer(setup_database, db_session):
     """
     Test updating an influencer.
@@ -100,12 +108,17 @@ def test_update_influencer(setup_database, db_session):
     db_session.add(influencer)
     db_session.commit()
 
-    payload = {"first_name": "Eva", "last_name": "Greenwood", "social_media_accounts": []}
+    payload = {
+        "first_name": "Eva",
+        "last_name": "Greenwood",
+        "social_media_accounts": [],
+    }
     response = client.put(f"/influencers/{influencer.id}", json=payload)
     assert response.status_code == 200
     data = response.json()
     assert data["first_name"] == "Eva"
     assert data["last_name"] == "Greenwood"
+
 
 def test_delete_influencer(setup_database, db_session):
     """
@@ -117,7 +130,9 @@ def test_delete_influencer(setup_database, db_session):
 
     response = client.delete(f"/influencers/{influencer.id}")
     assert response.status_code == 200
-    assert response.json() == {"message": f"Influencer with ID {influencer.id} deleted successfully"}
+    assert response.json() == {
+        "message": f"Influencer with ID {influencer.id} deleted successfully"
+    }
 
     # Verify the influencer is deleted
     response = client.get(f"/influencers/{influencer.id}")

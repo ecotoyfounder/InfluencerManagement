@@ -10,6 +10,7 @@ MOCK_HR_EMPLOYEES = [
     {"first_name": "Emma", "last_name": "Davis"},
 ]
 
+
 def fetch_employees_from_hr_system():
     """
     Simulates fetching employee data from an external HR system.
@@ -17,6 +18,7 @@ def fetch_employees_from_hr_system():
     """
     print("Fetching employees from HR system...")
     return MOCK_HR_EMPLOYEES
+
 
 def seed_employees(db: Session):
     """
@@ -26,10 +28,14 @@ def seed_employees(db: Session):
     hr_employees = fetch_employees_from_hr_system()
     for emp in hr_employees:
         # Check if the employee already exists
-        existing_employee = db.query(Employee).filter_by(
-            first_name=emp["first_name"], last_name=emp["last_name"]
-        ).first()
+        existing_employee = (
+            db.query(Employee)
+            .filter_by(first_name=emp["first_name"], last_name=emp["last_name"])
+            .first()
+        )
         if not existing_employee:
-            new_employee = Employee(first_name=emp["first_name"], last_name=emp["last_name"])
+            new_employee = Employee(
+                first_name=emp["first_name"], last_name=emp["last_name"]
+            )
             db.add(new_employee)
     db.commit()

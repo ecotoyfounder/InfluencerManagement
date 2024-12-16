@@ -1,4 +1,5 @@
 .form,
+.form-content,
 .platform-container,
 .platform-item {
   display: flex;
@@ -13,6 +14,11 @@
   border: solid 1px var(--box-background-color);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   justify-content: center;
+}
+
+.form-content {
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .platform-item {

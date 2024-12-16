@@ -100,9 +100,10 @@ const InfluencerList: React.FC = () => {
         const [influencersData, employeesData]: [Influencer[], Employee[]] =
           await Promise.all([getInfluencers(), getEmployees()]);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        setInfluencers(influencersData);
-        setEmployees(employeesData);
+        setInfluencers(influencersData || []);
+        setEmployees(employeesData || []);
       } catch (err) {
+        console.error('Fetch error:', err);
         handleError('Failed to fetch data', err);
       } finally {
         setLoading(false);
