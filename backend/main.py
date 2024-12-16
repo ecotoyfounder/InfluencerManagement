@@ -1,4 +1,3 @@
-import os
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -9,10 +8,6 @@ from database import SessionLocal, Base, engine
 
 app = FastAPI()
 
-# Redirect HTTP to HTTPS Middleware (только для продакшн)
-if os.getenv("ENV") == "production":
-    app.add_middleware(HTTPSRedirectMiddleware)
-
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
@@ -21,7 +16,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # Database setup
 @app.on_event("startup")
@@ -43,7 +37,6 @@ app.include_router(influencers.router, prefix="/influencers", tags=["Influencers
 app.include_router(employees.router, prefix="/employees", tags=["Employees"])
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
 
 @app.get("/")
 async def serve_frontend():
