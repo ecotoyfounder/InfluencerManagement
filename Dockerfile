@@ -29,6 +29,9 @@ COPY backend/ /backend
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Create the static folder in the backend
+RUN mkdir -p /backend/static
+
 # Copy frontend build to the static folder in the backend
 COPY --from=node-base /frontend/build/* /backend/static
 
