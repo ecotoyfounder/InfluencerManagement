@@ -3,24 +3,14 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
 from utils.seeder import seed_employees
 from routers import influencers, employees
 from database import SessionLocal, Base, engine
 
 app = FastAPI()
 
-# Middleware for X-Forwarded-Proto
-class ProxyHeadersMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        if "x-forwarded-proto" in request.headers:
-            request.scope["scheme"] = request.headers["x-forwarded-proto"]
-        return await call_next(request)
-
-# Redirect HTTP to HTTPS Middleware
+# Redirect HTTP to HTTPS Middleware (только для продакшн)
 if os.getenv("ENV") == "production":
-    app.add_middleware(ProxyHeadersMiddleware)
     app.add_middleware(HTTPSRedirectMiddleware)
 
 # CORS Middleware
