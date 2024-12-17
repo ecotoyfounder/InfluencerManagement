@@ -29,20 +29,6 @@ const CreateInfluencerForm: React.FC<InfluencerFormProps> = ({
   const [isError, setIsError] = useState<boolean>(false);
 
   const addSocialMediaAccount = () => {
-    const existingPlatforms = socialMediaAccounts.map(
-      (account) => account.platform,
-    );
-
-    const duplicatePlatform = existingPlatforms.find(
-      (platform, index, arr) => arr.indexOf(platform) !== index,
-    );
-
-    if (duplicatePlatform) {
-      setModalMessage(`A profile for ${duplicatePlatform} already exists!`);
-      setIsError(true);
-      return;
-    }
-
     setSocialMediaAccounts([
       ...socialMediaAccounts,
       { platform: 'Instagram', username: '' },
@@ -64,6 +50,15 @@ const CreateInfluencerForm: React.FC<InfluencerFormProps> = ({
     setSocialMediaAccounts(updatedAccounts);
   };
 
+  const hasPlatform = (): boolean => {
+    const existingPlatforms = socialMediaAccounts.map((account) =>
+      account.platform.toLowerCase(),
+    );
+
+    const uniquePlatforms = new Set(existingPlatforms);
+    return existingPlatforms.length !== uniquePlatforms.size;
+  };
+
   const hasDuplicateAccounts = (): boolean => {
     const accounts = socialMediaAccounts.map((account) =>
       `${account.platform}-${account.username}`.toLowerCase(),
@@ -75,11 +70,19 @@ const CreateInfluencerForm: React.FC<InfluencerFormProps> = ({
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!firstName || !lastName) {
+      setIsError(true);
       setModalMessage('First Name and Last Name are required!');
       return;
     }
     if (hasDuplicateAccounts()) {
+      setIsError(true);
       setModalMessage('Duplicate social media accounts are not allowed!');
+      return;
+    }
+
+    if (hasPlatform()) {
+      setIsError(true);
+      setModalMessage('A profile for that platform already exists!');
       return;
     }
 
